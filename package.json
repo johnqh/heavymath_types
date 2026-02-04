@@ -1,6 +1,6 @@
 {
   "name": "@sudobility/heavymath_types",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Comprehensive TypeScript types, interfaces, and utilities for Heavymath prediction market applications",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -43,7 +43,7 @@
     "zero-dependencies"
   ],
   "author": "Heavymath",
-  "license": "MIT",
+  "license": "BUSL-1.1",
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@types/node": "^24.9.1",
