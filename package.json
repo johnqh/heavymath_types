@@ -1,15 +1,15 @@
 {
   "name": "@sudobility/heavymath_types",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Comprehensive TypeScript types, interfaces, and utilities for Heavymath prediction market applications",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs"
     }
   },
   "scripts": {

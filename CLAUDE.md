@@ -11,16 +11,23 @@ Zero-dependency TypeScript types package for the Heavymath prediction market pla
 - **License**: BUSL-1.1
 - **Package manager**: Bun
 - **Output**: Dual format (ESM + CommonJS)
+- **Optional peer dependency**: `viem` ^2.0.0 (for `Hex` and `Address` types in events.ts)
 
 ## Quick Commands
 
 ```bash
 bun run build              # Build ESM + CJS to dist/
-bun run typecheck          # TypeScript validation
-bun run test               # Run all tests (Vitest)
+bun run build:esm          # Build ESM only
+bun run build:cjs          # Build CJS only (uses dist-cjs/ temp dir, then copies to dist/)
+bun run clean              # Remove dist/ directory
+bun run dev                # Watch mode (TypeScript recompilation on change)
+bun run typecheck          # TypeScript validation (--noEmit)
+bun run test               # Run all tests (Vitest, single run)
+bun run test:watch         # Run tests in watch mode (Vitest)
 bun run lint               # ESLint check
 bun run lint:fix           # ESLint auto-fix
-bun run format             # Prettier formatting
+bun run format             # Prettier formatting (write)
+bun run format:check       # Prettier check (no write)
 bun run verify             # typecheck + lint + build (pre-commit)
 ```
 
@@ -40,11 +47,40 @@ heavymath_types/
 │       ├── events.test.ts
 │       ├── api.ts              # API response data types (MarketData, etc.)
 │       └── api.test.ts
+├── dist/                       # Build output
+│   ├── index.js                # ESM entry
+│   ├── index.d.ts              # Type declarations
+│   ├── index.cjs               # CommonJS entry
+│   └── types/                  # ESM compiled types
+│       ├── index.js
+│       ├── index.d.ts
+│       ├── common.js / .d.ts
+│       ├── entities.js / .d.ts
+│       ├── events.js / .d.ts
+│       └── api.js / .d.ts
 ├── tsconfig.json               # Base config
-├── tsconfig.esm.json           # ESM build
-├── tsconfig.cjs.json           # CommonJS build
-└── vitest.config.ts
+├── tsconfig.esm.json           # ESM build (outputs to dist/)
+├── tsconfig.cjs.json           # CommonJS build (outputs to dist-cjs/, renamed to .cjs)
+├── eslint.config.mjs           # Flat ESLint config
+├── .prettierrc                 # Prettier config
+└── vitest.config.ts            # Vitest config (node environment)
 ```
+
+## Build Output Structure
+
+The `dist/` directory contains:
+- **ESM**: `.js` files built from `tsconfig.esm.json` directly into `dist/`
+- **CJS**: `.cjs` files built from `tsconfig.cjs.json` into a temporary `dist-cjs/` directory, then copied/renamed into `dist/` and the temp directory removed
+- **Types**: `.d.ts` declaration files alongside the ESM output
+
+Package exports: `"import"` resolves to `./dist/index.js`, `"require"` resolves to `./dist/index.cjs`, types resolve to `./dist/index.d.ts`.
+
+## Development Workflow
+
+1. Run `bun run dev` for watch mode during development
+2. Write tests in co-located `.test.ts` files
+3. Use `bun run test:watch` for TDD
+4. Run `bun run verify` before committing (runs typecheck + lint + build)
 
 ## Type Categories
 
@@ -88,6 +124,17 @@ Serialized types for API responses (strings instead of bigints):
 
 - **Entity types** (e.g., `MarketEntity`): Use `bigint` for numeric fields. Used in indexer/database code.
 - **Data types** (e.g., `MarketData`): Use `string` for numeric fields. Used in API responses and client code.
+
+## ESLint and Prettier Settings
+
+- **ESLint**: Flat config (`eslint.config.mjs`) with `@typescript-eslint` recommended rules; `no-unused-vars` ignores `_`-prefixed args; `no-explicit-any` is a warning; `no-empty-object-type` is disabled
+- **Prettier**: Semi, trailing commas (es5), single quotes, 80 char width, 2-space indent
+
+## Common Pitfalls
+
+- **CJS build temp directory**: The CJS build uses a temporary `dist-cjs/` directory. If a build is interrupted, this directory may remain and should be cleaned with `bun run clean` followed by `rm -rf dist-cjs`.
+- **Test type references**: Test files import from the source, not from `dist/`. Vitest is configured to only include `src/**/*.test.ts`.
+- **viem peer dependency**: The `Hex` and `Address` types used in `events.ts` come from `viem`. If viem is not installed, those types will be `any`. This is intentional since only the indexer/lib packages need the concrete types.
 
 ## Adding New Types
 
