@@ -1,4 +1,12 @@
 import { describe, it, expect } from 'vitest';
+import {
+  MarketStatusValues,
+  ClaimTypeValues,
+  WithdrawalTypeValues,
+  isMarketStatus,
+  isClaimType,
+  isWithdrawalType,
+} from './entities';
 import type {
   MarketStatus,
   ClaimType,
@@ -14,6 +22,138 @@ import type {
   OracleRequestEntity,
   MarketStateHistoryEntity,
 } from './entities';
+
+// ============================================================================
+// Runtime Const Arrays
+// ============================================================================
+
+describe('MarketStatusValues', () => {
+  it('should contain all four market statuses', () => {
+    expect(MarketStatusValues).toEqual([
+      'Active',
+      'Cancelled',
+      'Resolved',
+      'Abandoned',
+    ]);
+  });
+
+  it('should have length 4', () => {
+    expect(MarketStatusValues).toHaveLength(4);
+  });
+
+  it('should be a readonly tuple (as const provides compile-time immutability)', () => {
+    // as const ensures TypeScript treats this as a readonly tuple
+    // Verify the values are correct at runtime
+    expect(MarketStatusValues[0]).toBe('Active');
+    expect(MarketStatusValues[3]).toBe('Abandoned');
+  });
+});
+
+describe('ClaimTypeValues', () => {
+  it('should contain all claim types', () => {
+    expect(ClaimTypeValues).toEqual(['winnings', 'refund']);
+  });
+
+  it('should have length 2', () => {
+    expect(ClaimTypeValues).toHaveLength(2);
+  });
+
+  it('should be a readonly tuple (as const provides compile-time immutability)', () => {
+    expect(ClaimTypeValues[0]).toBe('winnings');
+    expect(ClaimTypeValues[1]).toBe('refund');
+  });
+});
+
+describe('WithdrawalTypeValues', () => {
+  it('should contain all withdrawal types', () => {
+    expect(WithdrawalTypeValues).toEqual(['dealer', 'system']);
+  });
+
+  it('should have length 2', () => {
+    expect(WithdrawalTypeValues).toHaveLength(2);
+  });
+
+  it('should be a readonly tuple (as const provides compile-time immutability)', () => {
+    expect(WithdrawalTypeValues[0]).toBe('dealer');
+    expect(WithdrawalTypeValues[1]).toBe('system');
+  });
+});
+
+// ============================================================================
+// Type Guards
+// ============================================================================
+
+describe('isMarketStatus', () => {
+  it('should return true for all valid market statuses', () => {
+    for (const status of MarketStatusValues) {
+      expect(isMarketStatus(status)).toBe(true);
+    }
+  });
+
+  it('should return false for invalid strings', () => {
+    expect(isMarketStatus('active')).toBe(false); // lowercase
+    expect(isMarketStatus('ACTIVE')).toBe(false); // uppercase
+    expect(isMarketStatus('')).toBe(false);
+    expect(isMarketStatus('Pending')).toBe(false);
+    expect(isMarketStatus('unknown')).toBe(false);
+  });
+
+  it('should narrow the type when true', () => {
+    const value: string = 'Active';
+    if (isMarketStatus(value)) {
+      const _status: MarketStatus = value;
+      expect(_status).toBe('Active');
+    }
+  });
+});
+
+describe('isClaimType', () => {
+  it('should return true for all valid claim types', () => {
+    for (const ct of ClaimTypeValues) {
+      expect(isClaimType(ct)).toBe(true);
+    }
+  });
+
+  it('should return false for invalid strings', () => {
+    expect(isClaimType('Winnings')).toBe(false); // wrong case
+    expect(isClaimType('')).toBe(false);
+    expect(isClaimType('bonus')).toBe(false);
+  });
+
+  it('should narrow the type when true', () => {
+    const value: string = 'refund';
+    if (isClaimType(value)) {
+      const _ct: ClaimType = value;
+      expect(_ct).toBe('refund');
+    }
+  });
+});
+
+describe('isWithdrawalType', () => {
+  it('should return true for all valid withdrawal types', () => {
+    for (const wt of WithdrawalTypeValues) {
+      expect(isWithdrawalType(wt)).toBe(true);
+    }
+  });
+
+  it('should return false for invalid strings', () => {
+    expect(isWithdrawalType('Dealer')).toBe(false); // wrong case
+    expect(isWithdrawalType('')).toBe(false);
+    expect(isWithdrawalType('user')).toBe(false);
+  });
+
+  it('should narrow the type when true', () => {
+    const value: string = 'system';
+    if (isWithdrawalType(value)) {
+      const _wt: WithdrawalType = value;
+      expect(_wt).toBe('system');
+    }
+  });
+});
+
+// ============================================================================
+// Entity Types
+// ============================================================================
 
 describe('entities types', () => {
   describe('MarketStatus', () => {

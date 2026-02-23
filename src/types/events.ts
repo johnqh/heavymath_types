@@ -9,12 +9,20 @@
  */
 
 /**
- * Hex string type (for use when viem is not available)
+ * Hex string type.
+ * Locally defined as `0x${string}` so it is always available with full type
+ * safety, regardless of whether the optional `viem` peer dependency is
+ * installed. When `viem` is present, this type is structurally compatible with
+ * `viem`'s `Hex` type.
  */
 export type Hex = `0x${string}`;
 
 /**
- * Address type (for use when viem is not available)
+ * Ethereum address type.
+ * Locally defined as `0x${string}` so it is always available with full type
+ * safety, regardless of whether the optional `viem` peer dependency is
+ * installed. When `viem` is present, this type is structurally compatible with
+ * `viem`'s `Address` type.
  */
 export type Address = `0x${string}`;
 

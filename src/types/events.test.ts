@@ -61,7 +61,26 @@ describe('events types', () => {
     });
 
     it('should be a const object', () => {
-      expect(Object.keys(OracleType)).toEqual(['Manual', 'PriceFeed', 'CustomData']);
+      expect(Object.keys(OracleType)).toEqual([
+        'Manual',
+        'PriceFeed',
+        'CustomData',
+      ]);
+    });
+
+    it('should have exactly 3 keys', () => {
+      expect(Object.keys(OracleType)).toHaveLength(3);
+    });
+
+    it('should have values 0, 1, 2', () => {
+      expect(Object.values(OracleType).sort()).toEqual([0, 1, 2]);
+    });
+
+    it('should be a const object (as const provides compile-time immutability)', () => {
+      // as const ensures TypeScript treats this as deeply readonly
+      // Verify the shape is correct at runtime
+      expect(OracleType.Manual).toBe(0);
+      expect(OracleType.CustomData).toBe(2);
     });
   });
 
@@ -72,6 +91,11 @@ describe('events types', () => {
       const customData: OracleTypeValue = 2;
 
       expect([manual, priceFeed, customData]).toEqual([0, 1, 2]);
+    });
+
+    it('should match OracleType values at runtime', () => {
+      const values: OracleTypeValue[] = Object.values(OracleType);
+      expect(values).toEqual([0, 1, 2]);
     });
   });
 

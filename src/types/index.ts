@@ -8,6 +8,15 @@ export type {
   ChainPrefixedId,
   PredictionId,
   TxLogId,
+  ParsedChainPrefixedId,
+} from './common';
+
+// Common validation utilities
+export {
+  isChainPrefixedId,
+  isPredictionId,
+  isTxLogId,
+  parseChainPrefixedId,
 } from './common';
 
 // Event types - export type for interfaces/types
@@ -53,6 +62,16 @@ export type {
   FeeWithdrawalEntity,
   OracleRequestEntity,
   MarketStateHistoryEntity,
+} from './entities';
+
+// Entity runtime const arrays and type guards
+export {
+  MarketStatusValues,
+  ClaimTypeValues,
+  WithdrawalTypeValues,
+  isMarketStatus,
+  isClaimType,
+  isWithdrawalType,
 } from './entities';
 
 // API types

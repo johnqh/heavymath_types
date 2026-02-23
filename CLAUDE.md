@@ -134,7 +134,7 @@ Serialized types for API responses (strings instead of bigints):
 
 - **CJS build temp directory**: The CJS build uses a temporary `dist-cjs/` directory. If a build is interrupted, this directory may remain and should be cleaned with `bun run clean` followed by `rm -rf dist-cjs`.
 - **Test type references**: Test files import from the source, not from `dist/`. Vitest is configured to only include `src/**/*.test.ts`.
-- **viem peer dependency**: The `Hex` and `Address` types used in `events.ts` come from `viem`. If viem is not installed, those types will be `any`. This is intentional since only the indexer/lib packages need the concrete types.
+- **viem peer dependency**: The `Hex` and `Address` types used in `events.ts` are locally defined as `0x${string}` template literal types, so they are always available with full type safety regardless of whether the optional `viem` peer dependency is installed. When `viem` is present, these local definitions are structurally compatible with `viem`'s own `Hex` and `Address` types.
 
 ## Adding New Types
 
