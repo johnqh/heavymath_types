@@ -7,12 +7,12 @@
  * This file defines the data payload types used within those responses
  */
 
-import { Optional } from './common';
+import { Optional } from './common.js';
 import {
   MarketStatus,
   WithdrawalType,
   WalletFavoriteEntity,
-} from './entities';
+} from './entities.js';
 
 // ============================================================================
 // API Data Types (used as payload in ApiResponse<T>)

@@ -4,7 +4,7 @@
  * @version 1.0.0
  */
 
-import { Optional } from './common';
+import { Optional } from './common.js';
 
 // ============================================================================
 // Enums and Constants

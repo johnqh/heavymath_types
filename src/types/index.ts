@@ -9,7 +9,7 @@ export type {
   PredictionId,
   TxLogId,
   ParsedChainPrefixedId,
-} from './common';
+} from './common.js';
 
 // Common validation utilities
 export {
@@ -17,7 +17,7 @@ export {
   isPredictionId,
   isTxLogId,
   parseChainPrefixedId,
-} from './common';
+} from './common.js';
 
 // Event types - export type for interfaces/types
 export type {
@@ -42,10 +42,10 @@ export type {
   OracleRegisteredArgs,
   OracleDataUpdatedArgs,
   UpdaterAuthorizedArgs,
-} from './events';
+} from './events.js';
 
 // Export const values separately
-export { OracleType } from './events';
+export { OracleType } from './events.js';
 
 // Entity types
 export type {
@@ -62,7 +62,7 @@ export type {
   FeeWithdrawalEntity,
   OracleRequestEntity,
   MarketStateHistoryEntity,
-} from './entities';
+} from './entities.js';
 
 // Entity runtime const arrays and type guards
 export {
@@ -72,7 +72,7 @@ export {
   isMarketStatus,
   isClaimType,
   isWithdrawalType,
-} from './entities';
+} from './entities.js';
 
 // API types
 export type {
@@ -89,4 +89,4 @@ export type {
   WalletFavoriteData,
   CreateFavoriteRequest,
   PaginationMeta,
-} from './api';
+} from './api.js';

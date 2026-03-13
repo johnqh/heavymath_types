@@ -1,22 +1,18 @@
 {
   "name": "@sudobility/heavymath_types",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Comprehensive TypeScript types, interfaces, and utilities for Heavymath prediction market applications",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
+  "type": "module",
+  "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": "./dist/index.js"
     }
   },
   "scripts": {
-    "build": "bun run build:esm && bun run build:cjs",
-    "build:esm": "bunx tsc -p tsconfig.esm.json",
-    "build:cjs": "bunx tsc -p tsconfig.cjs.json && bun run build:cjs-rename && rm -rf dist-cjs",
-    "build:cjs-rename": "find dist-cjs -name '*.js' -exec sh -c 'cp \"$1\" \"dist/$(basename \"${1%.js}.cjs\")\"' _ {} \\;",
+    "build": "tsc -p tsconfig.esm.json",
     "clean": "rm -rf dist",
     "dev": "bunx tsc --watch",
     "typecheck": "bunx tsc --noEmit",
