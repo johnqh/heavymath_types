@@ -132,7 +132,9 @@ export interface ParsedChainPrefixedId {
  * // chainId === 137, identifier === '0xabc'
  * ```
  */
-export function parseChainPrefixedId(id: ChainPrefixedId): ParsedChainPrefixedId {
+export function parseChainPrefixedId(
+  id: ChainPrefixedId
+): ParsedChainPrefixedId {
   const dashIndex = id.indexOf('-');
   return {
     chainId: Number(id.slice(0, dashIndex)),

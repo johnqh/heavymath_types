@@ -188,8 +188,7 @@ describe('isTxLogId', () => {
 
 describe('parseChainPrefixedId', () => {
   it('should parse a valid ChainPrefixedId into parts', () => {
-    const result: ParsedChainPrefixedId =
-      parseChainPrefixedId('137-0xabc');
+    const result: ParsedChainPrefixedId = parseChainPrefixedId('137-0xabc');
     expect(result.chainId).toBe(137);
     expect(result.identifier).toBe('0xabc');
   });
