@@ -317,6 +317,21 @@ export interface CreateFavoriteRequest {
   id: string;
 }
 
+/**
+ * Query parameters for the global favorite counts endpoint (GET /api/favorites/counts).
+ * Used to get the number of users who favorited specific items.
+ */
+export interface FavoriteCountsFilters {
+  /** Category (e.g., "sports") */
+  category: string;
+  /** Subcategory (e.g., "soccer") */
+  subcategory: string;
+  /** Item type (e.g., "team", "match") */
+  type: string;
+  /** Array of item IDs to get counts for */
+  itemIds: string[];
+}
+
 // ============================================================================
 // Paginated Response Types
 // ============================================================================
