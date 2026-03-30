@@ -58,6 +58,8 @@ export interface MarketData {
   blockNumber: string;
   /** Transaction hash of the market creation transaction */
   transactionHash: string;
+  /** Oracle ID (bytes32 hex) for sports event linking, null if not set */
+  oracleId: Optional<string>;
 }
 
 /**
