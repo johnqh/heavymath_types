@@ -168,11 +168,11 @@ describe('events types', () => {
     it('should have all required fields', () => {
       const args: MarketResolvedArgs = {
         marketId: 'market-1',
-        resolution: 7500n,
+        positiveOutcome: true,
         equilibrium: 5000n,
       };
 
-      expect(args.resolution).toBe(7500n);
+      expect(args.positiveOutcome).toBe(true);
       expect(args.equilibrium).toBe(5000n);
     });
   });

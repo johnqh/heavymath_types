@@ -123,10 +123,10 @@ export interface MarketEntity {
   /** Current status of the market */
   status: MarketStatus;
   /**
-   * Final resolution value of the market.
+   * Whether the positive (above equilibrium) side won.
    * `null` when the market is still active or was cancelled/abandoned.
    */
-  resolution: Optional<bigint>;
+  positiveOutcome: Optional<boolean>;
   /**
    * Equilibrium value at the time of resolution, representing the
    * weighted average of all predictions.

@@ -215,7 +215,7 @@ describe('entities types', () => {
         createdAt: 1699000000n,
         dealerFeeBps: 250n,
         status: 'Active',
-        resolution: null,
+        positiveOutcome: null,
         equilibrium: null,
         oracleId: null,
         chainId: 1,
@@ -226,7 +226,7 @@ describe('entities types', () => {
 
       expect(market.id).toBe('1-market123');
       expect(market.status).toBe('Active');
-      expect(market.resolution).toBeNull();
+      expect(market.positiveOutcome).toBeNull();
     });
 
     it('should allow optional fields to be set', () => {
@@ -241,7 +241,7 @@ describe('entities types', () => {
         createdAt: 1699000000n,
         dealerFeeBps: 250n,
         status: 'Resolved',
-        resolution: 7500n,
+        positiveOutcome: true,
         equilibrium: 5000n,
         oracleId: 'oracle-1',
         chainId: 1,
@@ -250,7 +250,7 @@ describe('entities types', () => {
         timestamp: 1699000000n,
       };
 
-      expect(market.resolution).toBe(7500n);
+      expect(market.positiveOutcome).toBe(true);
       expect(market.equilibrium).toBe(5000n);
       expect(market.oracleId).toBe('oracle-1');
     });
