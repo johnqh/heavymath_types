@@ -335,6 +335,89 @@ export interface FavoriteCountsFilters {
 }
 
 // ============================================================================
+// Oracle Resolution Types
+// ============================================================================
+
+/**
+ * Request body for setting oracle config on a market.
+ * Used by: POST /api/markets/:id/oracle-config
+ */
+export interface SetMarketOracleConfigRequest {
+  /** Sports API team ID whose win = positive outcome */
+  positiveTeamId: string;
+  /** Display name of the positive team */
+  positiveTeamName?: string;
+  /** Display name of the negative team */
+  negativeTeamName?: string;
+}
+
+/**
+ * Oracle config data returned by the API.
+ * Used by: POST/GET /api/markets/:id/oracle-config
+ */
+export interface MarketOracleConfigData {
+  /** Unique identifier (same as market ID, chain-prefixed) */
+  id: string;
+  /** EVM chain ID */
+  chainId: number;
+  /** Chain-prefixed market ID */
+  marketId: string;
+  /** Numeric sport code (1-10) decoded from oracleId */
+  sportCode: number;
+  /** Game/fixture ID from the sports API */
+  gameId: string;
+  /** Sports API team ID whose win = positive outcome */
+  positiveTeamId: string;
+  /** Display name of the positive team */
+  positiveTeamName: string | null;
+  /** Display name of the negative team */
+  negativeTeamName: string | null;
+  /** Unix timestamp (seconds) when the config was created */
+  createdAt: number;
+}
+
+/**
+ * Successful resolution check response (HTTP 200).
+ * Used by: GET /api/markets/:id/resolve
+ * The `result` field is what Chainlink extracts on-chain.
+ */
+export interface MarketResolutionCheckSuccess {
+  /** 1 = positive outcome, 0 = negative outcome */
+  result: number;
+  /** Always true for successful checks */
+  gameFinished: true;
+  /** Display name of the positive team */
+  positiveTeamName: string | null;
+  /** Display name of the negative team */
+  negativeTeamName: string | null;
+  /** Sports API ID of the winning team */
+  winnerId: number;
+  /** Name of the winning team */
+  winnerName: string;
+  /** Score string (e.g., "3-1") */
+  score: string;
+  /** Human-readable result description */
+  description: string;
+  /** ISO 8601 timestamp of the check */
+  timestamp: string;
+}
+
+/**
+ * Failed resolution check response (HTTP 400).
+ * Used by: GET /api/markets/:id/resolve
+ */
+export interface MarketResolutionCheckError {
+  /** Always false for error responses */
+  success: false;
+  /** Human-readable error message */
+  error: string;
+  /** Current game status from the sports API (e.g., "NS", "1H", "HT") */
+  gameStatus?: string;
+  /** ISO 8601 timestamp of the check */
+  timestamp: string;
+}
+
+// ============================================================================
 // Paginated Response Types
 // ============================================================================
 

@@ -90,6 +90,10 @@ export type {
   CreateFavoriteRequest,
   FavoriteCountsFilters,
   PaginationMeta,
+  SetMarketOracleConfigRequest,
+  MarketOracleConfigData,
+  MarketResolutionCheckSuccess,
+  MarketResolutionCheckError,
 } from './api.js';
 
 // Datetime utilities
