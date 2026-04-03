@@ -54,6 +54,8 @@ export interface MarketCreatedArgs {
   subCategory: bigint;
   deadline: bigint;
   description: string;
+  oracleId: Hex;
+  conditionData: Hex;
 }
 
 /**

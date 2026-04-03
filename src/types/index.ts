@@ -96,5 +96,28 @@ export type {
   MarketResolutionCheckError,
 } from './api.js';
 
+// Condition types - export type for interfaces/types
+export type {
+  ConditionTypeValue,
+  ScoreTypeValue,
+  TeamSideValue,
+  ComparisonOperatorValue,
+  WinLossCondition,
+  MatchScoreCondition,
+  TournamentCondition,
+  ConditionData,
+} from './condition.js';
+
+// Condition const values and utilities
+export {
+  ConditionType,
+  ScoreType,
+  TeamSide,
+  ComparisonOperator,
+  encodeConditionData,
+  decodeConditionData,
+  formatConditionDescription,
+} from './condition.js';
+
 // Datetime utilities
 export { getCurrentDatetime } from './datetime.js';

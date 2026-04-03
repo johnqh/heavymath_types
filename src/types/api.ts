@@ -60,6 +60,8 @@ export interface MarketData {
   transactionHash: string;
   /** Oracle ID (bytes32 hex) for sports event linking, null if not set */
   oracleId: Optional<string>;
+  /** Encoded resolution condition (bytes32 hex), null for legacy markets */
+  conditionData: Optional<string>;
 }
 
 /**
@@ -343,8 +345,8 @@ export interface FavoriteCountsFilters {
  * Used by: POST /api/markets/:id/oracle-config
  */
 export interface SetMarketOracleConfigRequest {
-  /** Sports API team ID whose win = positive outcome */
-  positiveTeamId: string;
+  /** Sports API team ID whose win = positive outcome (required for WinLoss, optional otherwise) */
+  positiveTeamId?: string;
   /** Display name of the positive team */
   positiveTeamName?: string;
   /** Display name of the negative team */
@@ -386,6 +388,8 @@ export interface MarketResolutionCheckSuccess {
   result: number;
   /** Always true for successful checks */
   gameFinished: true;
+  /** Condition type used for resolution (e.g., "WinLoss", "MatchScore", "Tournament") */
+  conditionType?: string;
   /** Display name of the positive team */
   positiveTeamName: string | null;
   /** Display name of the negative team */

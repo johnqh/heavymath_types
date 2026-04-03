@@ -138,6 +138,11 @@ export interface MarketEntity {
    * `null` if no oracle is assigned (manual resolution).
    */
   oracleId: Optional<string>;
+  /**
+   * Encoded resolution condition (bytes32 hex).
+   * `null` or zero-bytes for legacy WinLoss markets.
+   */
+  conditionData: Optional<string>;
   /** EVM chain ID where this market exists (e.g., 1 for Ethereum mainnet) */
   chainId: number;
   /** Block number in which the market creation transaction was mined */
