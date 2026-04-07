@@ -332,8 +332,8 @@ export interface FavoriteCountsFilters {
   subcategory: string;
   /** Item type (e.g., "team", "match") */
   type: string;
-  /** Array of item IDs to get counts for */
-  itemIds: string[];
+  /** Optional array of item IDs to filter by. Omit to get all non-zero counts. */
+  itemIds?: string[];
 }
 
 // ============================================================================
