@@ -8,11 +8,7 @@
  */
 
 import { Optional } from './common.js';
-import {
-  MarketStatus,
-  WithdrawalType,
-  WalletFavoriteEntity,
-} from './entities.js';
+import { MarketStatus, WithdrawalType } from './entities.js';
 
 // ============================================================================
 // API Data Types (used as payload in ApiResponse<T>)
@@ -136,6 +132,28 @@ export interface DealerNftData {
    * `null` if the NFT has never been transferred after minting.
    */
   lastTransferTransactionHash: Optional<string>;
+}
+
+/**
+ * Dealer license data returned by API endpoints.
+ * Serialised form of the `dealer_license` table where `bigint` fields are
+ * represented as strings for JSON compatibility.
+ */
+export interface DealerLicenseData {
+  /** Unique identifier, typically a {@link import('./common').ChainPrefixedId} */
+  id: string;
+  /** EVM chain ID where this license exists */
+  chainId: number;
+  /** String representation of the on-chain token ID */
+  tokenId: string;
+  /** Ethereum address of the dealer who holds this license */
+  dealerAddress: string;
+  /** ISO 8601 timestamp when the license was issued */
+  issuedAt: string;
+  /** String representation of the block number where the license was issued */
+  blockNumber: string;
+  /** Transaction hash of the license issuance transaction */
+  transactionHash: string;
 }
 
 /**
@@ -299,9 +317,26 @@ export interface SSEStatsData {
 }
 
 /**
- * Wallet favorite data (same as entity for API use).
+ * Wallet favorite data returned by API endpoints.
+ * Serialised form of {@link import('./entities').WalletFavoriteEntity} where
+ * `bigint` fields are represented as numbers for JSON compatibility.
  */
-export type WalletFavoriteData = WalletFavoriteEntity;
+export interface WalletFavoriteData {
+  /** Auto-incrementing database primary key */
+  id: number;
+  /** Ethereum address of the wallet that owns this favorite */
+  walletAddress: string;
+  /** Category of the favorited item (e.g., "sports", "crypto") */
+  category: string;
+  /** Sub-category of the favorited item (e.g., "football", "bitcoin") */
+  subcategory: string;
+  /** Type of the favorited item (e.g., "market", "dealer") */
+  type: string;
+  /** ID of the favorited item */
+  itemId: string;
+  /** Unix timestamp (milliseconds) when the favorite was created */
+  createdAt: number;
+}
 
 // ============================================================================
 // API Request Types
@@ -334,6 +369,317 @@ export interface FavoriteCountsFilters {
   type: string;
   /** Optional array of item IDs to filter by. Omit to get all non-zero counts. */
   itemIds?: string[];
+}
+
+// ============================================================================
+// License Permission Data (from dealer_license + license_permission tables)
+// ============================================================================
+
+/**
+ * License permission data returned by dealer API endpoints.
+ * Serialised form of the `license_permission` table where `bigint`
+ * fields are represented as strings for JSON compatibility.
+ *
+ * Note: This differs from {@link DealerPermissionData} which comes from the
+ * `dealer_permission` table. The `license_permission` table stores category
+ * as a bigint and subCategories as a JSON array string.
+ */
+export interface LicensePermissionData {
+  /** Unique identifier */
+  id: string;
+  /** EVM chain ID where this permission exists */
+  chainId: number;
+  /** String representation of the dealer license NFT token ID */
+  tokenId: string;
+  /** String representation of the numeric category index */
+  category: string;
+  /** JSON array of subcategories (stored as text) */
+  subCategories: string;
+  /** ISO 8601 timestamp when the permission was granted */
+  grantedAt: string;
+  /** String representation of the block number where the permission was granted */
+  blockNumber: string;
+  /** Transaction hash of the permission grant transaction */
+  transactionHash: string;
+}
+
+/**
+ * Dealer license data with nested permissions, returned by dealer endpoints.
+ */
+export interface DealerWithPermissionsData extends DealerLicenseData {
+  /** Permissions associated with this dealer license */
+  permissions: LicensePermissionData[];
+}
+
+// ============================================================================
+// Per-Dealer Stats
+// ============================================================================
+
+/**
+ * Statistics for a specific dealer, returned by GET /api/dealers/:id/stats.
+ */
+export interface DealerStatsData {
+  /** Ethereum address of the dealer */
+  dealerAddress: string;
+  /** Total number of markets created by this dealer */
+  totalMarkets: number;
+  /** Number of currently active markets */
+  activeMarkets: number;
+  /** Number of resolved markets */
+  resolvedMarkets: number;
+  /** Total number of predictions across all dealer markets */
+  totalPredictions: number;
+  /** String representation of total volume (sum of amounts) across all predictions */
+  totalVolume: string;
+  /** String representation of total fees withdrawn by this dealer */
+  totalFeesWithdrawn: string;
+}
+
+// ============================================================================
+// Per-Market Stats
+// ============================================================================
+
+/**
+ * Statistics for a specific market, returned by GET /api/markets/:id/stats.
+ * Different from {@link MarketStatsData} which contains aggregate stats
+ * across all markets.
+ */
+export interface MarketDetailStatsData {
+  /** Chain-prefixed market ID */
+  marketId: string;
+  /** Total number of predictions in this market */
+  totalPredictions: number;
+  /** String representation of total volume (sum of all prediction amounts) */
+  totalVolume: string;
+  /** Average prediction percentage (0-100, rounded to integer) */
+  averagePercentage: number;
+  /** Total number of claims made */
+  totalClaims: number;
+  /** String representation of total claimed amount */
+  totalClaimed: string;
+}
+
+// ============================================================================
+// Category Data
+// ============================================================================
+
+/**
+ * Category count data returned by GET /api/markets/categories.
+ */
+export interface CategoryCountData {
+  /** Category name (e.g., "sports", "crypto") */
+  category: string;
+  /** Number of markets in this category */
+  count: number;
+}
+
+// ============================================================================
+// Market Resolution Data (embedded in market detail response)
+// ============================================================================
+
+/**
+ * Resolution data returned alongside market details when a market is resolved.
+ * Used by GET /api/markets/:id when the market status is 'Resolved'.
+ */
+export interface MarketResolutionData {
+  /** Unique identifier */
+  id: string;
+  /** EVM chain ID */
+  chainId: number;
+  /** Chain-prefixed market ID */
+  marketId: string;
+  /** Whether the positive outcome won */
+  positiveOutcome: boolean;
+  /** String representation of the equilibrium value */
+  equilibrium: string;
+  /** ISO 8601 timestamp when the market was resolved */
+  resolvedAt: string;
+  /** String representation of the block number */
+  blockNumber: string;
+  /** Transaction hash of the resolution */
+  transactionHash: string;
+}
+
+/**
+ * Extended market data that includes resolution information.
+ * Returned by GET /api/markets/:id.
+ */
+export interface MarketDetailData extends MarketData {
+  /** Resolution data, present only when market status is 'Resolved' */
+  resolution: MarketResolutionData | null;
+}
+
+// ============================================================================
+// Wallet Data Types
+// ============================================================================
+
+/**
+ * Aggregate wallet balance data returned by GET /api/wallets/balances.
+ */
+export interface WalletBalanceSummaryData {
+  /** Ethereum address of the wallet */
+  userAddress: string;
+  /** String representation of total staked amount */
+  totalStaked: string;
+  /** String representation of total claimed amount */
+  totalClaimed: string;
+  /** Number of active (unclaimed) bets */
+  activeBets: number;
+  /** Total number of bets */
+  totalBets: number;
+}
+
+/**
+ * Detailed wallet balance data returned by GET /api/wallets/balances/:address.
+ */
+export interface WalletBalanceDetailData {
+  /** Ethereum address of the wallet */
+  address: string;
+  /** String representation of total staked amount */
+  totalStaked: string;
+  /** String representation of total claimed amount */
+  totalClaimed: string;
+  /** String representation of total winnings */
+  totalWinnings: string;
+  /** String representation of total refunds */
+  totalRefunds: string;
+  /** Number of active (unclaimed) bets */
+  activeBets: number;
+  /** Number of claimed bets */
+  claimedBets: number;
+  /** Total number of bets */
+  totalBets: number;
+}
+
+/**
+ * Wallet transaction item returned by GET /api/wallets/transactions.
+ */
+export interface WalletTransactionData {
+  /** Transaction type: "prediction", "winnings", or "refund" */
+  type: string;
+  /** Unique identifier */
+  id: string;
+  /** Chain-prefixed market ID */
+  marketId: string;
+  /** String representation of the amount */
+  amount: string;
+  /** Prediction percentage (only for prediction type) */
+  percentage?: number;
+  /** Predicted outcome (only for prediction type) */
+  outcome?: string;
+  /** Unix timestamp (seconds) */
+  timestamp: number;
+  /** Transaction hash */
+  transactionHash: string;
+}
+
+/**
+ * Wallet history item returned by GET /api/wallets/history.
+ * Includes enriched data like market title and status.
+ */
+export interface WalletHistoryItemData {
+  /** Activity type: "prediction", "winnings", "refund", or "withdrawal" */
+  type: string;
+  /** Unique identifier */
+  id: string;
+  /** Chain-prefixed market ID (null for non-market activities) */
+  marketId: Optional<string>;
+  /** Market title (null if market not found) */
+  marketTitle: Optional<string>;
+  /** Market status (only for prediction type) */
+  marketStatus?: Optional<string>;
+  /** String representation of the amount */
+  amount: string;
+  /** Prediction percentage (only for prediction type) */
+  percentage?: number;
+  /** Whether the prediction has been claimed (only for prediction type) */
+  hasClaimed?: number;
+  /** String representation of claimed amount (only for prediction type) */
+  claimedAmount?: Optional<string>;
+  /** Withdrawal type (only for withdrawal type) */
+  withdrawalType?: string;
+  /** Unix timestamp (seconds) */
+  timestamp: number;
+  /** Transaction hash */
+  transactionHash: string;
+}
+
+// ============================================================================
+// Service Health Data
+// ============================================================================
+
+/**
+ * Per-service health check data returned by service-specific health endpoints.
+ * More detailed than {@link HealthData}, includes database status and service-specific counts.
+ */
+export interface ServiceHealthData {
+  /** Current health status */
+  status: 'healthy' | 'unhealthy';
+  /** Name of the service being checked */
+  service: string;
+  /** Database connection status */
+  database: 'connected' | 'disconnected';
+  /** Service-specific item count (e.g., market count, dealer count) */
+  itemCount?: number;
+  /** Unix timestamp (milliseconds) when the health check was performed */
+  timestamp: number;
+}
+
+// ============================================================================
+// Trigger Lock/Resolve Response Types
+// ============================================================================
+
+/**
+ * Response data for POST /api/markets/:id/trigger-lock.
+ */
+export interface TriggerLockResponseData {
+  /** Whether the lock was successful */
+  locked: boolean;
+  /** Transaction hash of the lock transaction */
+  transactionHash: string;
+}
+
+/**
+ * Response data for POST /api/markets/:id/trigger-resolve.
+ * Extends the resolution check success data with on-chain transaction info.
+ */
+export interface TriggerResolveResponseData extends MarketResolutionCheckSuccess {
+  /** Whether the oracle data was updated on-chain */
+  oracleUpdated: boolean;
+  /** Transaction hash of the resolution transaction */
+  transactionHash: string;
+}
+
+// ============================================================================
+// API Info Response Types
+// ============================================================================
+
+/**
+ * API info data returned by root endpoints (GET /api/markets, GET /api/dealers, etc.)
+ */
+export interface ApiInfoData {
+  /** Name of the API service */
+  name: string;
+  /** API version string */
+  version: string;
+  /** List of available endpoints */
+  endpoints: string[];
+}
+
+// ============================================================================
+// Sports Proxy Health
+// ============================================================================
+
+/**
+ * Health check data for the sports proxy service.
+ */
+export interface SportsHealthData {
+  /** Status string (e.g., "ok") */
+  status: string;
+  /** Number of entries in the sports cache */
+  cacheSize: number;
+  /** List of supported sports */
+  supportedSports: string[];
 }
 
 // ============================================================================
