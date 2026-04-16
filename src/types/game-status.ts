@@ -92,8 +92,7 @@ export const HockeyStatus = {
   Cancelled: 'CANC',
 } as const;
 
-export type HockeyStatusCode =
-  (typeof HockeyStatus)[keyof typeof HockeyStatus];
+export type HockeyStatusCode = (typeof HockeyStatus)[keyof typeof HockeyStatus];
 
 // ============================================================================
 // Baseball
@@ -151,8 +150,7 @@ export const RugbyStatus = {
   Cancelled: 'CANC',
 } as const;
 
-export type RugbyStatusCode =
-  (typeof RugbyStatus)[keyof typeof RugbyStatus];
+export type RugbyStatusCode = (typeof RugbyStatus)[keyof typeof RugbyStatus];
 
 // ============================================================================
 // Handball
@@ -359,7 +357,11 @@ export const footballGameState = (status: string): GameState => {
   if (FOOTBALL_FINISHED.has(status)) return 'Finished';
   if (status === FootballStatus.Postponed) return 'Postponed';
   if (status === FootballStatus.Cancelled) return 'Cancelled';
-  if (status === FootballStatus.Suspended || status === FootballStatus.Interrupted) return 'Suspended';
+  if (
+    status === FootballStatus.Suspended ||
+    status === FootballStatus.Interrupted
+  )
+    return 'Suspended';
   return 'NotStarted';
 };
 
