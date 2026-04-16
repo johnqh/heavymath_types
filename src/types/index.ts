@@ -190,5 +190,46 @@ export {
   formatConditionDescription,
 } from './condition.js';
 
+// Game status types - export type for derived types
+export type {
+  GameState,
+  FootballStatusCode,
+  BasketballStatusCode,
+  HockeyStatusCode,
+  BaseballStatusCode,
+  NflStatusCode,
+  RugbyStatusCode,
+  HandballStatusCode,
+  VolleyballStatusCode,
+  F1StatusCode,
+  MmaStatusCode,
+} from './game-status.js';
+
+// Game status const values, state classifiers, and predicates
+export {
+  GameStateValues,
+  FootballStatus,
+  BasketballStatus,
+  HockeyStatus,
+  BaseballStatus,
+  NflStatus,
+  RugbyStatus,
+  HandballStatus,
+  VolleyballStatus,
+  F1Status,
+  MmaStatus,
+  footballGameState,
+  basketballGameState,
+  hockeyGameState,
+  baseballGameState,
+  nflGameState,
+  rugbyGameState,
+  handballGameState,
+  volleyballGameState,
+  f1GameState,
+  mmaGameState,
+  isGameStarted,
+} from './game-status.js';
+
 // Datetime utilities
 export { getCurrentDatetime } from './datetime.js';
