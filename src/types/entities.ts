@@ -123,16 +123,10 @@ export interface MarketEntity {
   /** Current status of the market */
   status: MarketStatus;
   /**
-   * Whether the positive (above equilibrium) side won.
+   * Whether the positive side won.
    * `null` when the market is still active or was cancelled/abandoned.
    */
   positiveOutcome: Optional<boolean>;
-  /**
-   * Equilibrium value at the time of resolution, representing the
-   * weighted average of all predictions.
-   * `null` when the market has not been resolved.
-   */
-  equilibrium: Optional<bigint>;
   /**
    * Identifier of the oracle assigned to this market.
    * `null` if no oracle is assigned (manual resolution).

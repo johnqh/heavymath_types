@@ -87,7 +87,6 @@ export interface PredictionUpdatedArgs {
 export interface MarketResolvedArgs {
   marketId: string;
   positiveOutcome: boolean;
-  equilibrium: bigint;
 }
 
 /**

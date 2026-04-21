@@ -490,8 +490,6 @@ export interface MarketResolutionData {
   marketId: string;
   /** Whether the positive outcome won */
   positiveOutcome: boolean;
-  /** String representation of the equilibrium value */
-  equilibrium: string;
   /** ISO 8601 timestamp when the market was resolved */
   resolvedAt: string;
   /** String representation of the block number */

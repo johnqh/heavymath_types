@@ -169,11 +169,9 @@ describe('events types', () => {
       const args: MarketResolvedArgs = {
         marketId: 'market-1',
         positiveOutcome: true,
-        equilibrium: 5000n,
       };
 
       expect(args.positiveOutcome).toBe(true);
-      expect(args.equilibrium).toBe(5000n);
     });
   });
 

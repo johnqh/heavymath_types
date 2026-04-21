@@ -216,7 +216,6 @@ describe('entities types', () => {
         dealerFeeBps: 250n,
         status: 'Active',
         positiveOutcome: null,
-        equilibrium: null,
         oracleId: null,
         chainId: 1,
         blockNumber: 12345n,
@@ -242,7 +241,6 @@ describe('entities types', () => {
         dealerFeeBps: 250n,
         status: 'Resolved',
         positiveOutcome: true,
-        equilibrium: 5000n,
         oracleId: 'oracle-1',
         chainId: 1,
         blockNumber: 12345n,
@@ -251,7 +249,6 @@ describe('entities types', () => {
       };
 
       expect(market.positiveOutcome).toBe(true);
-      expect(market.equilibrium).toBe(5000n);
       expect(market.oracleId).toBe('oracle-1');
     });
   });
