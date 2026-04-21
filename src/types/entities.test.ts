@@ -28,17 +28,18 @@ import type {
 // ============================================================================
 
 describe('MarketStatusValues', () => {
-  it('should contain all four market statuses', () => {
+  it('should contain all five market statuses', () => {
     expect(MarketStatusValues).toEqual([
       'Active',
       'Cancelled',
       'Resolved',
       'Abandoned',
+      'Locked',
     ]);
   });
 
-  it('should have length 4', () => {
-    expect(MarketStatusValues).toHaveLength(4);
+  it('should have length 5', () => {
+    expect(MarketStatusValues).toHaveLength(5);
   });
 
   it('should be a readonly tuple (as const provides compile-time immutability)', () => {

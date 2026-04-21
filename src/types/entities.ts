@@ -19,11 +19,13 @@ export const MarketStatusValues = [
   'Cancelled',
   'Resolved',
   'Abandoned',
+  'Locked',
 ] as const;
 
 /**
  * Possible states of a prediction market.
  * - `'Active'`    - Market is open for predictions
+ * - `'Locked'`    - Market is locked after deadline, awaiting resolution
  * - `'Cancelled'` - Market was cancelled by the dealer before resolution
  * - `'Resolved'`  - Market has been resolved with a final outcome
  * - `'Abandoned'` - Market was abandoned due to no resolution after deadline
