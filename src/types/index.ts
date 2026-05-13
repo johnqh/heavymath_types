@@ -231,5 +231,28 @@ export {
   isGameStarted,
 } from './game-status.js';
 
+// Discussion types
+export type {
+  SubjectType,
+  ModerationStatus,
+  DiscussionEntity,
+  DiscussionCommentEntity,
+  DiscussionData,
+  CommentData,
+  DiscussionCommentsResponse,
+  PostCommentRequest,
+  ModerateCommentRequest,
+  AuthNonceResponse,
+  AuthVerifyRequest,
+  AuthVerifyResponse,
+} from './discussion';
+
+export {
+  SubjectTypeValues,
+  isSubjectType,
+  ModerationStatusValues,
+  isModerationStatus,
+} from './discussion';
+
 // Datetime utilities
 export { getCurrentDatetime } from './datetime.js';
