@@ -3,7 +3,7 @@
  * Supports games/matches/fixtures/races, tournament+year, and teams.
  */
 
-import type { Optional } from './common.js';
+import type { Optional } from './common.ts';
 
 // ============================================================================
 // Const value objects (compatible with erasableSyntaxOnly)
