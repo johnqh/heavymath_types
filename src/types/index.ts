@@ -245,14 +245,14 @@ export type {
   AuthNonceResponse,
   AuthVerifyRequest,
   AuthVerifyResponse,
-} from './discussion';
+} from './discussion.js';
 
 export {
   SubjectTypeValues,
   isSubjectType,
   ModerationStatusValues,
   isModerationStatus,
-} from './discussion';
+} from './discussion.js';
 
 // Datetime utilities
 export { getCurrentDatetime } from './datetime.js';
