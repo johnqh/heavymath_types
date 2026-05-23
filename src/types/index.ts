@@ -111,6 +111,7 @@ export type {
   TriggerResolveResponseData,
   ApiInfoData,
   SportsHealthData,
+  StadiumData,
 } from './api.js';
 
 export type {

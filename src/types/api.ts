@@ -766,6 +766,45 @@ export interface MarketResolutionCheckError {
 }
 
 // ============================================================================
+// Stadium Data Types
+// ============================================================================
+
+/**
+ * Stadium data returned by API endpoints.
+ * Represents a 2026 FIFA World Cup host venue.
+ */
+export interface StadiumData {
+  /** Auto-incrementing primary key */
+  id: number;
+  /** Stadium's common commercial name (e.g., "MetLife Stadium") */
+  name: string;
+  /** FIFA clean venue name used during tournament (e.g., "New York New Jersey Stadium") */
+  fifaName: string;
+  /** City where the stadium is located */
+  city: string;
+  /** State or province */
+  state: string;
+  /** Country code: "US", "CA", or "MX" */
+  country: string;
+  /** Latitude coordinate */
+  latitude: number;
+  /** Longitude coordinate */
+  longitude: number;
+  /** Seating capacity for FIFA World Cup configuration */
+  capacity: number;
+  /** Description of the stadium */
+  description: string;
+  /** URL to stadium image (nullable) */
+  imageUrl: string | null;
+  /** Whether the stadium has a retractable roof */
+  hasRoof: boolean;
+  /** Comma-separated match phases hosted (e.g., "Group Stage,Round of 32,Quarterfinal") */
+  matchPhases: string;
+  /** Total number of matches scheduled at this venue */
+  matchCount: number;
+}
+
+// ============================================================================
 // Paginated Response Types
 // ============================================================================
 
