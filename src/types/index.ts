@@ -104,6 +104,7 @@ export type {
   MarketDetailData,
   WalletBalanceSummaryData,
   WalletBalanceDetailData,
+  LeaderboardEntryData,
   WalletTransactionData,
   WalletHistoryItemData,
   ServiceHealthData,

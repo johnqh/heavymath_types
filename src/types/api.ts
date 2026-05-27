@@ -550,6 +550,30 @@ export interface WalletBalanceDetailData {
 }
 
 /**
+ * Leaderboard entry returned by GET /api/wallets/leaderboard.
+ */
+export interface LeaderboardEntryData {
+  /** Rank position */
+  rank: number;
+  /** Ethereum address of the wallet */
+  userAddress: string;
+  /** Deterministic display name derived from the wallet address */
+  displayName: string;
+  /** String representation of total staked amount */
+  totalStaked: string;
+  /** String representation of total winnings */
+  totalWinnings: string;
+  /** String representation of total refunds */
+  totalRefunds: string;
+  /** String representation of net profit (winnings - staked) */
+  netProfit: string;
+  /** Number of active (unclaimed) bets */
+  activeBets: number;
+  /** Total number of bets */
+  totalBets: number;
+}
+
+/**
  * Wallet transaction item returned by GET /api/wallets/transactions.
  */
 export interface WalletTransactionData {

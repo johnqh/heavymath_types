@@ -6,29 +6,28 @@ This file provides context for Claude Code when working on this project.
 
 Zero-dependency TypeScript types package for the Heavymath prediction market platform. Provides shared types used across all other packages.
 
-- **Package**: `@sudobility/heavymath_types`
-- **Stack**: TypeScript 5.9, Vitest
+- **Package**: `@sudobility/heavymath_types` (v0.0.31)
+- **Stack**: TypeScript 5.9, Vitest 4.0
 - **License**: BUSL-1.1
 - **Package manager**: Bun
-- **Output**: Dual format (ESM + CommonJS)
+- **Output**: ESM only (`tsc -p tsconfig.esm.json` -> `dist/`)
 - **Optional peer dependency**: `viem` ^2.0.0 (for `Hex` and `Address` types in events.ts)
 
-## Quick Commands
+## Commands
 
 ```bash
-bun run build              # Build ESM + CJS to dist/
-bun run build:esm          # Build ESM only
-bun run build:cjs          # Build CJS only (uses dist-cjs/ temp dir, then copies to dist/)
-bun run clean              # Remove dist/ directory
-bun run dev                # Watch mode (TypeScript recompilation on change)
-bun run typecheck          # TypeScript validation (--noEmit)
-bun run test               # Run all tests (Vitest, single run)
-bun run test:watch         # Run tests in watch mode (Vitest)
-bun run lint               # ESLint check
-bun run lint:fix           # ESLint auto-fix
-bun run format             # Prettier formatting (write)
-bun run format:check       # Prettier check (no write)
-bun run verify             # typecheck + lint + build (pre-commit)
+bun run build          # Build ESM to dist/ (tsc -p tsconfig.esm.json)
+bun run clean          # Remove dist/
+bun run dev            # Watch mode (TypeScript recompilation on change)
+bun run typecheck      # TypeScript validation (--noEmit)
+bun run test           # Run all tests (Vitest, single run)
+bun run test:watch     # Run tests in watch mode (Vitest)
+bun run lint           # ESLint check
+bun run lint:fix       # ESLint auto-fix
+bun run format         # Prettier formatting (write)
+bun run format:check   # Prettier check (no write)
+bun run verify         # typecheck + lint + build (pre-commit)
+bun run prepublishOnly # clean + verify
 ```
 
 ## Project Structure
@@ -39,41 +38,31 @@ heavymath_types/
 │   ├── index.ts               # Main entry (re-exports types/)
 │   └── types/
 │       ├── index.ts            # Barrel export for all types
-│       ├── common.ts           # Optional, ChainPrefixedId, PredictionId, TxLogId
-│       ├── common.test.ts
-│       ├── entities.ts         # Database entity interfaces (MarketEntity, etc.)
-│       ├── entities.test.ts
+│       ├── common.ts           # Optional<T>, ChainPrefixedId, PredictionId, TxLogId + validators
+│       ├── entities.ts         # Database entity interfaces (MarketEntity, etc.) with bigint fields
 │       ├── events.ts           # Blockchain event arg types + OracleType const
-│       ├── events.test.ts
-│       ├── api.ts              # API response data types (MarketData, etc.)
-│       └── api.test.ts
-├── dist/                       # Build output
-│   ├── index.js                # ESM entry
-│   ├── index.d.ts              # Type declarations
-│   ├── index.cjs               # CommonJS entry
-│   └── types/                  # ESM compiled types
-│       ├── index.js
-│       ├── index.d.ts
-│       ├── common.js / .d.ts
-│       ├── entities.js / .d.ts
-│       ├── events.js / .d.ts
-│       └── api.js / .d.ts
+│       ├── api.ts              # API response types (string fields for JSON serialization)
+│       ├── condition.ts        # Market condition encoding (WinLoss, MatchScore, Tournament)
+│       ├── sports.ts           # Sports metadata for 10 sports (leagues, seasons, search)
+│       ├── game-status.ts      # Game status codes + state classifiers for all sports
+│       ├── discussion.ts       # Discussion/comment entities + SIWE auth types
+│       ├── datetime.ts         # getCurrentDatetime() utility
+│       └── *.test.ts           # Co-located test files
+├── dist/                       # Build output (ESM .js + .d.ts declarations)
 ├── tsconfig.json               # Base config
-├── tsconfig.esm.json           # ESM build (outputs to dist/)
-├── tsconfig.cjs.json           # CommonJS build (outputs to dist-cjs/, renamed to .cjs)
+├── tsconfig.esm.json           # ESM build config (outputs to dist/)
 ├── eslint.config.mjs           # Flat ESLint config
 ├── .prettierrc                 # Prettier config
 └── vitest.config.ts            # Vitest config (node environment)
 ```
 
-## Build Output Structure
+## Build Output
 
-The `dist/` directory contains:
-- **ESM**: `.js` files built from `tsconfig.esm.json` directly into `dist/`
-- **CJS**: `.cjs` files built from `tsconfig.cjs.json` into a temporary `dist-cjs/` directory, then copied/renamed into `dist/` and the temp directory removed
-- **Types**: `.d.ts` declaration files alongside the ESM output
+The `dist/` directory contains ESM `.js` files and `.d.ts` declaration files. Package exports ESM only:
 
-Package exports: `"import"` resolves to `./dist/index.js`, `"require"` resolves to `./dist/index.cjs`, types resolve to `./dist/index.d.ts`.
+```json
+{ ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } }
+```
 
 ## Development Workflow
 
@@ -89,21 +78,15 @@ Package exports: `"import"` resolves to `./dist/index.js`, `"require"` resolves 
 - `ChainPrefixedId` - `${number}-${string}` (e.g., "1-0xabc123")
 - `PredictionId` - `${number}-${string}-${string}` (e.g., "1-market123-0xuser")
 - `TxLogId` - `${string}-${bigint}` (e.g., "0xabc123-5n")
+- Validators: `isChainPrefixedId()`, `isPredictionId()`, `isTxLogId()`, `parseChainPrefixedId()`
 
 ### Entity Types (`entities.ts`)
 Database-level types with `bigint` fields:
-- `MarketEntity` - Prediction market records
-- `PredictionEntity` - User prediction records
-- `ClaimEntity` - Winnings/refund claims
-- `OracleEntity` - Registered oracles
-- `DealerNftEntity` - Dealer license NFTs
-- `DealerPermissionEntity` - NFT permissions
-- `WalletFavoriteEntity` - User favorites
-- `FeeWithdrawalEntity` - Fee withdrawal records
-- `OracleRequestEntity` - Oracle request tracking
-- `MarketStateHistoryEntity` - State transitions
-
-**Enums**: `MarketStatus` ('Active'|'Cancelled'|'Resolved'|'Abandoned'), `ClaimType` ('winnings'|'refund'), `WithdrawalType` ('dealer'|'system')
+- `MarketEntity`, `PredictionEntity`, `ClaimEntity`, `OracleEntity`
+- `DealerNftEntity`, `DealerPermissionEntity`, `WalletFavoriteEntity`
+- `FeeWithdrawalEntity`, `OracleRequestEntity`, `MarketStateHistoryEntity`
+- **Enums**: `MarketStatus` ('Active'|'Cancelled'|'Resolved'|'Abandoned'), `ClaimType` ('winnings'|'refund'), `WithdrawalType` ('dealer'|'system')
+- Runtime const arrays + type guards: `MarketStatusValues`, `isMarketStatus()`, etc.
 
 ### Event Types (`events.ts`)
 Blockchain event argument interfaces:
@@ -115,10 +98,48 @@ Blockchain event argument interfaces:
 
 ### API Types (`api.ts`)
 Serialized types for API responses (strings instead of bigints):
-- `MarketData`, `PredictionData`, `DealerNftData`, `DealerPermissionData`
+- `MarketData`, `PredictionData`, `DealerNftData`, `DealerLicenseData`, `DealerPermissionData`
 - `FeeWithdrawalData`, `OracleRequestData`, `MarketStateHistoryData`
-- `MarketStatsData`, `HealthData`, `SSEStatsData`
-- `WalletFavoriteData`, `CreateFavoriteRequest`, `PaginationMeta`
+- `MarketStatsData`, `MarketDetailStatsData`, `MarketDetailData`, `MarketResolutionData`
+- `HealthData`, `SportsHealthData`, `ServiceHealthData`, `SSEStatsData`, `ApiInfoData`
+- `WalletFavoriteData`, `CreateFavoriteRequest`, `FavoriteCountsFilters`, `PaginationMeta`
+- `WalletBalanceSummaryData`, `WalletBalanceDetailData`, `WalletTransactionData`, `WalletHistoryItemData`
+- `DealerWithPermissionsData`, `DealerStatsData`, `CategoryCountData`
+- `SetMarketOracleConfigRequest`, `MarketOracleConfigData`
+- `MarketResolutionCheckSuccess`, `MarketResolutionCheckError`
+- `TriggerLockResponseData`, `TriggerResolveResponseData`
+- `StadiumData` (World Cup 2026 venue data)
+
+### Condition Types (`condition.ts`)
+Market condition encoding/decoding with bytes32 layout:
+- **Condition types**: `WinLossCondition`, `MatchScoreCondition`, `TournamentCondition`
+- **Enums**: `ConditionType` (WinLoss=1, MatchScore=2, Tournament=3), `ScoreType`, `TeamSide`, `ComparisonOperator`
+- **Utilities**: `encodeConditionData()`, `decodeConditionData()`, `formatConditionDescription()`
+
+### Sports Types (`sports.ts`)
+Metadata for 10 sports (football, basketball, hockey, baseball, NFL, rugby, handball, volleyball, F1, MMA):
+- `SportName` type, `SportsApiResponse`, `SportsQueryParams`
+- Per-sport league/season/country types (e.g., `FootballLeague`, `FootballSeason`, `BasketballLeague`)
+- Per-sport league/season query param types
+- `SearchTeamResult`, `SportsSearchResponse`
+
+### Game Status Types (`game-status.ts`)
+Status codes and state classifiers for all 10 sports:
+- `GameState` type: 'not_started' | 'in_progress' | 'finished' | 'cancelled' | 'unknown'
+- Per-sport status code types and const objects (e.g., `FootballStatus`, `BasketballStatus`)
+- Per-sport state classifier functions (e.g., `footballGameState()`, `basketballGameState()`)
+- `isGameStarted()` utility predicate
+
+### Discussion Types (`discussion.ts`)
+Discussion/comment system with SIWE (Sign-In with Ethereum) auth:
+- `DiscussionEntity`, `DiscussionCommentEntity` (database types)
+- `DiscussionData`, `CommentData` (API response types)
+- `PostCommentRequest`, `ModerateCommentRequest`
+- `AuthNonceResponse`, `AuthVerifyRequest`, `AuthVerifyResponse`
+- `SubjectType`, `ModerationStatus` with runtime values and type guards
+
+### Datetime Utility (`datetime.ts`)
+- `getCurrentDatetime()` - returns current date/time string
 
 ## Key Distinction: Entity vs Data Types
 
@@ -132,7 +153,6 @@ Serialized types for API responses (strings instead of bigints):
 
 ## Common Pitfalls
 
-- **CJS build temp directory**: The CJS build uses a temporary `dist-cjs/` directory. If a build is interrupted, this directory may remain and should be cleaned with `bun run clean` followed by `rm -rf dist-cjs`.
 - **Test type references**: Test files import from the source, not from `dist/`. Vitest is configured to only include `src/**/*.test.ts`.
 - **viem peer dependency**: The `Hex` and `Address` types used in `events.ts` are locally defined as `0x${string}` template literal types, so they are always available with full type safety regardless of whether the optional `viem` peer dependency is installed. When `viem` is present, these local definitions are structurally compatible with `viem`'s own `Hex` and `Address` types.
 
@@ -149,7 +169,10 @@ This package is used by:
 - `heavymath_indexer` - Entity types for database operations
 - `heavymath_indexer_client` - Re-exports Data types for API consumers
 - `heavymath_lib` - Business logic type definitions
+- `heavymath_contracts` - Contract type definitions
+- `heavymath_ui` - UI component type definitions
 - `heavymath_app` - Indirect via indexer_client
+- `wcprediction_app` - Indirect via indexer_client
 
 ## CI/CD
 
