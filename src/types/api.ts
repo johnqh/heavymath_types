@@ -804,6 +804,8 @@ export interface StadiumData {
   name: string;
   /** FIFA clean venue name used during tournament (e.g., "New York New Jersey Stadium") */
   fifaName: string;
+  /** Venue name as returned by api-sports fixtures (used for matching fixtures to stadiums) */
+  aliasName: string | null;
   /** City where the stadium is located */
   city: string;
   /** State or province */
