@@ -659,6 +659,8 @@ export interface TriggerLockResponseData {
   locked: boolean;
   /** Transaction hash of the lock transaction */
   transactionHash: string;
+  /** Whether the market was abandoned due to no valid split (bettors can claim refunds) */
+  abandoned?: boolean;
 }
 
 /**
